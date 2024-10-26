@@ -34,11 +34,11 @@ To set up, follow these steps :
 
 for HTTPS
 ```bash
-   git clone https://github.com/Makiti-GitHub/matoa-tms-backend.git
+   git clone https://github.com/maxwell-balla/library.git
 ```
 for SSH
 ```bash
-   git clone git@github.com:Makiti-GitHub/matoa-tms-backend.git
+   git clone git@github.com:maxwell-balla/library.git
 ```
 
 2. If not, Navigate to the library directory:
