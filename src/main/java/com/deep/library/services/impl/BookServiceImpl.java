@@ -8,6 +8,8 @@ import com.deep.library.exceptions.TitleConflictException;
 import com.deep.library.repositories.BookRepository;
 import com.deep.library.services.BookService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +33,13 @@ public class BookServiceImpl implements BookService {
         verifiedTitle(dto);
         BookEntity book = saveBookEntity(dto);
         return bookMapper.entityToResponse(book);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<BookResponse> getAllBooks(Pageable pageable) {
+        return bookRepository.findAll(pageable)
+                .map(bookMapper::entityToResponse);
     }
 
     private void verifiedTitle(BookRequest dto) {
