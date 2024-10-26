@@ -3,9 +3,13 @@ spring:
     name: library
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://0.0.0.0:5430/library
+    url: jdbc:postgresql://localhost:5430/library
     username: postgres
     password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 
 server:
   port: 8087

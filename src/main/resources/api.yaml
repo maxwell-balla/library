@@ -1,0 +1,94 @@
+openapi: 3.0.0
+info:
+  title: OpenAPI specification - Library
+  description: OpenAPI documentation for Library Project
+  version: 1.0.0
+  contact:
+    name: Maxwell Balla
+    email: ballamaxwell7@gmail.com
+  license:
+    name: Apache-2.0 license
+    url: https://github.com/maxwell-balla/library?tab=Apache-2.0-1-ov-file
+servers:
+  - url: http://localhost:8087
+    description: Local Env
+
+paths:
+  /api/v1/books:
+    post:
+      summary: Create a new book
+      tags:
+        - Book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookRequest'
+      responses:
+        201:
+          description: Book created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResponse'
+        400:
+          description: Bad Request - Invalid Input or validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        409:
+          description: Conflict field
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        500:
+          description: Internal Server Error - An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+components:
+  schemas:
+    BookRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          uniqueItems: true
+        description:
+          type: string
+      required:
+        - title
+
+    BookResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the book
+        title:
+          type: string
+          description: The title of the book
+        description:
+          type: string
+          description: The description of the book
+
+    ApiResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+        success:
+          type: boolean
+        timestamp:
+          type: string
+          format: date-time
+        message:
+          type: string
+        details:
+          type: string
