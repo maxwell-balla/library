@@ -1,14 +1,12 @@
 package com.deep.library.domains.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -30,4 +28,9 @@ public class UserEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "user")
     private List<HistoryEntity> borrowHistory;
+
+    public UserEntity(Long id, String username) {
+        this.id = id;
+        this.username = username;
+    }
 }

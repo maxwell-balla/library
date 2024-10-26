@@ -5,9 +5,6 @@ import com.deep.library.domains.dto.BookResponse;
 import com.deep.library.domains.dto.UserRequest;
 import com.deep.library.domains.dto.UserResponse;
 import com.deep.library.domains.entities.BookEntity;
-import com.deep.library.domains.entities.UserEntity;
-
-import java.util.ArrayList;
 
 public final class Constants {
 
@@ -25,6 +22,5 @@ public final class Constants {
     // User constants
     public static final String UNIQUE_USERNAME = "Unique Username";
     public static final UserRequest USER_REQUEST = new UserRequest(UNIQUE_USERNAME);
-    public static final UserEntity USER_ENTITY = new UserEntity(1L, UNIQUE_USERNAME, new ArrayList<>());
-    public static final UserResponse USER_RESPONSE = new UserResponse(1L, UNIQUE_USERNAME, new ArrayList<>());
+    public static final UserResponse USER_RESPONSE = new UserResponse(1L, UNIQUE_USERNAME);
 }

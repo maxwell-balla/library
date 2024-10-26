@@ -7,7 +7,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-
-    @Mapping(target = "takenBooks", ignore = true)
+    
     UserResponse entityToResponse(UserEntity user);
 }
