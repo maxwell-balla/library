@@ -13,4 +13,6 @@ public interface BookService {
     Page<BookResponse> getAllBooks(Pageable pageable);
 
     Optional<BookResponse> getBookById(String title);
+
+    void deleteBook(Long bookId);
 }

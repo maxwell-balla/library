@@ -8,4 +8,8 @@ public class BookNotFoundException extends RuntimeException {
     public static BookNotFoundException forTitle(String title) {
         return new BookNotFoundException("The title <<" + title + ">> not found");
     }
+
+    public static BookNotFoundException forId(Long bookId) {
+        return new BookNotFoundException("The Book with id <<" + bookId + ">> not found");
+    }
 }
