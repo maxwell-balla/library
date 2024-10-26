@@ -4,7 +4,9 @@ import com.deep.library.domains.dto.UserRequest;
 import com.deep.library.domains.dto.UserResponse;
 import com.deep.library.domains.entities.UserEntity;
 import com.deep.library.domains.mappers.UserMapper;
+import com.deep.library.exceptions.BookNotFoundException;
 import com.deep.library.exceptions.UserExistsException;
+import com.deep.library.exceptions.UserNotFoundException;
 import com.deep.library.repositories.UserRepository;
 import com.deep.library.services.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -35,5 +37,14 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         return userMapper.entityToResponse(user);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw UserNotFoundException.forId(userId);
+        }
+        userRepository.deleteById(userId);
     }
 }

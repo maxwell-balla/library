@@ -186,6 +186,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+        409:
+          description: Conflict about username
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         500:
           description: Internal Server Error - An unexpected error occurred.
           content:
@@ -219,6 +225,35 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
         '500':
           description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/users/{userId}:
+    delete:
+      summary: Delete a user by ID
+      description: Deletes a user from the system based on the provided user ID.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+          description: Unique identifier of the user to be deleted.
+      responses:
+        '204':
+          description: User deleted successfully. No content returned.
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal server error.
           content:
             application/json:
               schema:
