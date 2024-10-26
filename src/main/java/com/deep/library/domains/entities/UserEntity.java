@@ -27,4 +27,7 @@ public class UserEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<BookEntity> books;
+
+    @OneToMany(mappedBy = "user")
+    private List<HistoryEntity> borrowHistory;
 }

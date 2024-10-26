@@ -4,7 +4,6 @@ import com.deep.library.domains.dto.UserRequest;
 import com.deep.library.domains.dto.UserResponse;
 import com.deep.library.domains.entities.UserEntity;
 import com.deep.library.domains.mappers.UserMapper;
-import com.deep.library.exceptions.BookNotFoundException;
 import com.deep.library.exceptions.UserExistsException;
 import com.deep.library.exceptions.UserNotFoundException;
 import com.deep.library.repositories.UserRepository;
@@ -42,9 +41,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void deleteUser(Long userId) {
+        verifiedUserExist(userId);
+        userRepository.deleteById(userId);
+    }
+
+    public void verifiedUserExist(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw UserNotFoundException.forId(userId);
         }
-        userRepository.deleteById(userId);
     }
 }

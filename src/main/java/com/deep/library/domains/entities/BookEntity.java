@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -30,6 +32,9 @@ public class BookEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    @OneToMany(mappedBy = "book")
+    private List<HistoryEntity> borrowHistory;
 
     public BookEntity(Long id, String title, String description, boolean isAvailable) {
         this.id = id;

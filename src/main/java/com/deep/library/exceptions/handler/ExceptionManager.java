@@ -1,9 +1,6 @@
 package com.deep.library.exceptions.handler;
 
-import com.deep.library.exceptions.BookNotFoundException;
-import com.deep.library.exceptions.TitleConflictException;
-import com.deep.library.exceptions.UserExistsException;
-import com.deep.library.exceptions.UserNotFoundException;
+import com.deep.library.exceptions.*;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Throwables;
 import org.springframework.http.HttpStatus;
@@ -16,6 +13,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 @Slf4j
 public class ExceptionManager extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(LibraryNotFoundException.class)
+    public ResponseEntity<Object> handleLibraryNotFoundException(LibraryNotFoundException ex, WebRequest request) {
+        return buildResponseEntity(ex, HttpStatus.NOT_FOUND, request, ex.getMessage());
+    }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {

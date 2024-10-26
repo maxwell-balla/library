@@ -259,8 +259,101 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
+  /api/v1/library/borrow:
+    post:
+      tags:
+        - library
+      summary: Borrow a book
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: bookId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Book borrowed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+        400:
+          description: Bad Request (e.g., invalid userId or bookId)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        404:
+          description: Not Found (e.g., user or book does not exist)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/library/return:
+    post:
+      tags:
+        - library
+      summary: Return a borrowed book
+      parameters:
+        - name: historyId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+
+      responses:
+        200:
+          description: Book returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+        400:
+          description: Bad Request (e.g., invalid historyId)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        404:
+          description: Not Found (e.g., history record does not exist)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
 components:
   schemas:
+    HistoryResponse:
+      type: object
+      properties:
+        takenBy:
+          type: string
+          description: username who taken
+        titleBook:
+          type: string
+          description: title of the book
+
     UserResponse:
       type: object
       properties:
