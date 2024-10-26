@@ -46,9 +46,19 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<BookResponse> getBookById(String title) {
         return bookRepository.findByTitle(title)
                 .map(bookMapper::entityToResponse);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteBook(Long bookId) {
+        if (!bookRepository.existsById(bookId)) {
+            throw BookNotFoundException.forId(bookId);
+        }
+        bookRepository.deleteById(bookId);
     }
 
     private void verifiedTitle(BookRequest dto) {
