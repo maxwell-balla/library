@@ -133,6 +133,38 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
+  /api/v1/books/{title}:
+    get:
+      summary: Retrieve a book by title
+      description: Returns the details of a book specified by its unique title.
+      operationId: getBookById
+      parameters:
+        - name: title
+          in: path
+          description: The unique title of the book to retrieve.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A book response with the requested book details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResponse'
+        404:
+          description: Book not found for the provided title.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        500:
+          description: Internal Server Error - An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
 components:
   schemas:
     BookRequest:

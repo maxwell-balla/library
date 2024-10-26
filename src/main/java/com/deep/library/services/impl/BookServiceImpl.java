@@ -4,6 +4,7 @@ import com.deep.library.domains.dto.BookRequest;
 import com.deep.library.domains.dto.BookResponse;
 import com.deep.library.domains.entities.BookEntity;
 import com.deep.library.domains.mappers.BookMapper;
+import com.deep.library.exceptions.BookNotFoundException;
 import com.deep.library.exceptions.TitleConflictException;
 import com.deep.library.repositories.BookRepository;
 import com.deep.library.services.BookService;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -39,6 +42,12 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     public Page<BookResponse> getAllBooks(Pageable pageable) {
         return bookRepository.findAll(pageable)
+                .map(bookMapper::entityToResponse);
+    }
+
+    @Override
+    public Optional<BookResponse> getBookById(String title) {
+        return bookRepository.findByTitle(title)
                 .map(bookMapper::entityToResponse);
     }
 

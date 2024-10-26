@@ -1,5 +1,6 @@
 package com.deep.library.exceptions.handler;
 
+import com.deep.library.exceptions.BookNotFoundException;
 import com.deep.library.exceptions.TitleConflictException;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Throwables;
@@ -10,16 +11,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.ArrayList;
-import java.util.Date;
-
 @RestControllerAdvice
 @Slf4j
 public class ExceptionManager extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(BookNotFoundException.class)
+    protected ResponseEntity<Object> handleBookNotFoundException(BookNotFoundException ex, WebRequest request) {
+        return buildResponseEntity(ex, HttpStatus.NOT_FOUND, request, ex.getMessage());
+    }
+
     @ExceptionHandler(TitleConflictException.class)
     protected ResponseEntity<Object> handleTitleConflictException(Exception ex, WebRequest request) {
-        return buildResponseEntity(ex, HttpStatus.CONFLICT, request, "Conflict occurred");
+        return buildResponseEntity(ex, HttpStatus.CONFLICT, request, ex.getMessage());
     }
 
     private ResponseEntity<Object> buildResponseEntity(Exception ex, HttpStatus status, WebRequest request, String defaultMessage) {

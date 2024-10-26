@@ -2,6 +2,7 @@ package com.deep.library.controllers;
 
 import com.deep.library.domains.dto.BookRequest;
 import com.deep.library.domains.dto.BookResponse;
+import com.deep.library.exceptions.BookNotFoundException;
 import com.deep.library.services.BookService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -34,5 +35,12 @@ class BookController {
     @GetMapping
     Page<BookResponse> getBooks(Pageable pageable) {
         return bookService.getAllBooks(pageable);
+    }
+
+    @GetMapping("/{title}")
+    ResponseEntity<BookResponse> getBookById(@PathVariable String title) {
+        return bookService.getBookById(title)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> BookNotFoundException.forTitle(title));
     }
 }
