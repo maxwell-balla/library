@@ -193,16 +193,77 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
+  /api/v1/users:
+    post:
+      summary: Create a new user
+      description: Creates a new user in the system.
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '201':
+          description: User created successfully, returning the new user details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Bad Request, validation errors present.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
 components:
   schemas:
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier of the user.
+        username:
+          type: string
+          description: Username of the user.
+        takenBooks:
+          type: array
+          description: list of books taken by this user.
+          items:
+            $ref: '#/components/schemas/BookResponse'
+
+    UserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username for the new user.
+          minLength: 3
+          maxLength: 8
+          example: "maxwell"
+      required:
+        - username
+
     BookRequest:
       type: object
       properties:
         title:
           type: string
           uniqueItems: true
+          minLength: 2
+          maxLength: 100
         description:
           type: string
+          maxLength: 1000
       required:
         - title
 

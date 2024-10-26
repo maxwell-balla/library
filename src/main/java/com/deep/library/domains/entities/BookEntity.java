@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -28,4 +27,15 @@ public class BookEntity extends BaseEntity {
 
     @Column(name = "is_available", nullable = false)
     private boolean isAvailable = true;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
+    public BookEntity(Long id, String title, String description, boolean isAvailable) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.isAvailable = isAvailable;
+    }
 }
