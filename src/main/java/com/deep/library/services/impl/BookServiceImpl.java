@@ -28,14 +28,21 @@ public class BookServiceImpl implements BookService {
     @Transactional(propagation = Propagation.REQUIRED)
     public BookResponse createBook(BookRequest dto) {
         log.debug("Request to save Book : {}", dto);
+        verifiedTitle(dto);
+        BookEntity book = saveBookEntity(dto);
+        return bookMapper.entityToResponse(book);
+    }
+
+    private void verifiedTitle(BookRequest dto) {
         if (Boolean.TRUE.equals(bookRepository.existsByTitle(dto.title()))) {
             throw TitleConflictException.forTitle(dto.title());
         }
+    }
+
+    private BookEntity saveBookEntity(BookRequest dto) {
         BookEntity book = new BookEntity();
         book.setTitle(dto.title());
         book.setDescription(dto.description());
-        bookRepository.save(book);
-
-        return bookMapper.entityToResponse(book);
+        return bookRepository.save(book);
     }
 }
