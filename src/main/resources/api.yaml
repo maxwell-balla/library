@@ -15,6 +15,88 @@ servers:
 
 paths:
   /api/v1/books:
+    get:
+      summary: Retrieve a paginated list of books
+      description: Returns a paginated list of book responses, sorted by title.
+      operationId: getBooks
+      parameters:
+        - name: page
+          in: query
+          description: The page number to retrieve (zero-based).
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The number of records to return per page.
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            default: "title"
+      responses:
+        '200':
+          description: A paginated list of books.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BookResponse'
+                  pageable:
+                    type: object
+                    properties:
+                      pageNumber:
+                        type: integer
+                      pageSize:
+                        type: integer
+                      sort:
+                        type: object
+                        properties:
+                          sorted:
+                            type: boolean
+                          unsorted:
+                            type: boolean
+                          empty:
+                            type: boolean
+                  totalPages:
+                    type: integer
+                  totalElements:
+                    type: integer
+                  last:
+                    type: boolean
+                  first:
+                    type: boolean
+                  number:
+                    type: integer
+                  size:
+                    type: integer
+                  numberOfElements:
+                    type: integer
+                  empty:
+                    type: boolean
+        '400':
+          description: Bad Request, invalid pagination parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
     post:
       summary: Create a new book
       tags:
