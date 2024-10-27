@@ -9,10 +9,10 @@ import com.deep.library.exceptions.LibraryNotFoundException;
 import com.deep.library.repositories.BookRepository;
 import com.deep.library.repositories.HistoryRepository;
 import com.deep.library.repositories.UserRepository;
+import com.deep.library.services.HistoryService;
 import com.deep.library.services.LibraryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
@@ -26,16 +26,18 @@ public class LibraryServiceImpl implements LibraryService {
     private final BookRepository bookRepository;
     private final HistoryRepository historyRepository;
     private final HistoryMapper historyMapper;
+    private final HistoryService historyService;
 
-    public LibraryServiceImpl(UserRepository userRepository, BookRepository bookRepository, HistoryRepository historyRepository, HistoryMapper historyMapper) {
+    public LibraryServiceImpl(UserRepository userRepository, BookRepository bookRepository, HistoryRepository historyRepository, HistoryMapper historyMapper, HistoryService historyService) {
         this.userRepository = userRepository;
         this.bookRepository = bookRepository;
         this.historyRepository = historyRepository;
         this.historyMapper = historyMapper;
+        this.historyService = historyService;
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public HistoryResponse borrowBook(Long userId, Long bookId) {
         Optional<UserEntity> user = userRepository.findById(userId);
         Optional<BookEntity> book = bookRepository.findById(bookId);
@@ -44,24 +46,10 @@ public class LibraryServiceImpl implements LibraryService {
             if (!book.get().isAvailable()) {
                 throw new LibraryNotFoundException("The book is currently unavailable");
             }
-            return saveHistoryAndUpdateBook(user.get(), book.get());
+            updateBookStatus(book.get());
+            return historyService.saveHistory(user.get(), book.get());
         }
         throw LibraryNotFoundException.forBorrow("User or Book not found");
-    }
-
-    public HistoryResponse saveHistoryAndUpdateBook(UserEntity user, BookEntity book) {
-        HistoryEntity history = setHistoryAndSave(user, book);
-        updateBookStatus(book);
-        return historyMapper.entityToResponse(history);
-    }
-
-    public HistoryEntity setHistoryAndSave(UserEntity user, BookEntity book) {
-        HistoryEntity history = new HistoryEntity();
-        history.setUser(user);
-        history.setBook(book);
-        history.setRecordDate(Instant.now());
-        historyRepository.save(history);
-        return history;
     }
 
     private void updateBookStatus(BookEntity book) {
@@ -74,6 +62,7 @@ public class LibraryServiceImpl implements LibraryService {
         HistoryEntity history = historyRepository.findById(historyId)
                 .orElseThrow(() -> LibraryNotFoundException.forReturn("History record not found"));
 
+        history.getBook().setAvailable(true);
         history.setRecordDate(Instant.now());
         return historyMapper.entityToResponse(historyRepository.save(history));
     }
