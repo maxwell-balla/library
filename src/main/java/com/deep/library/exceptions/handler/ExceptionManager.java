@@ -14,6 +14,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Slf4j
 public class ExceptionManager extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(TokenException.class)
+    public ResponseEntity<Object> handleTokenException(TokenException ex, WebRequest request) {
+        return buildResponseEntity(ex, HttpStatus.BAD_REQUEST, request, ex.getMessage());
+    }
+
     @ExceptionHandler(LibraryNotFoundException.class)
     public ResponseEntity<Object> handleLibraryNotFoundException(LibraryNotFoundException ex, WebRequest request) {
         return buildResponseEntity(ex, HttpStatus.NOT_FOUND, request, ex.getMessage());

@@ -39,46 +39,58 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .password(passwordEncoder.encode(request.password()))
                 .role(Role.USER)
                 .build();
+
         userRepository.save(user);
-        var token = jwtService.generateToken(user);
+
         return AuthResponse.builder()
-                .token(token)
+                .accessToken(jwtService.generateAccessToken(user))
+                .refreshToken(jwtService.generateRefreshToken(user))
                 .build();
     }
 
     @Override
     public AuthResponse login(AuthRequest request) {
         log.debug("login request:{}", request);
+
+        // Spring Security authentication check credentials
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.email(),
                         request.password()
                 )
         );
-        UserEntity user = userRepository.findByUsername(request.email())
+
+        log.info("authenticated user: {}", request.email());
+        var user = userRepository.findByUsername(request.email())
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
-        var token = jwtService.generateToken(user);
+
         return AuthResponse.builder()
-                .token(token)
+                .accessToken(jwtService.generateAccessToken(user))
+                .refreshToken(jwtService.generateRefreshToken(user))
                 .build();
     }
 
     @Override
     public AuthResponse becomeAdmin(AuthRequest request) {
         log.debug("become Admin request:{}", request);
+
+        // Spring Security authentication check credentials
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.email(),
                         request.password()
                 )
         );
+
         UserEntity user = userRepository.findByUsername(request.email())
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
         user.setRole(Role.ADMIN);
         userRepository.save(user);
-        var token = jwtService.generateToken(user);
+
         return AuthResponse.builder()
-                .token(token)
+                .accessToken(jwtService.generateAccessToken(user))
+                .refreshToken(jwtService.generateRefreshToken(user))
                 .build();
     }
 }
