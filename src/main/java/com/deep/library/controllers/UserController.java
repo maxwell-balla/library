@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,15 +21,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    ResponseEntity<UserResponse> createUser(
-            @RequestBody @Valid UserRequest userRequest
-    ) {
-        UserResponse newUser = userService.createUser(userRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
-    }
-
     @DeleteMapping("/{userId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<UserResponse> deleteUser(
             @PathVariable Long userId
     ) {
