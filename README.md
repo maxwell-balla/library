@@ -2,12 +2,11 @@
 
 ## Uses cases
 
-- As user, I want to add book in the library
+- As admin, I want to add book in the library
 - As user, I want to see the list of book
-- As user, I want to remove book
+- As admin, I want to remove book
 
-- As user, I want to add another user
-- As user, I want to remove another user
+- As admin, I want to remove another user
 
 - As user, I want to borrow a book
 - As user, I want to return a book
@@ -16,6 +15,7 @@
 
 - Spring Boot 3 (with Java 21)
 - Spring Data JPA
+- Spring Security
 - Spring Web
 - Spring Test
 - OpenAPI and Swagger UI Documentation
@@ -25,6 +25,7 @@
 - Lombok
 - Postgres
 - Docker
+- JWT
 
 ## Setup Instructions
 
@@ -55,4 +56,4 @@ for SSH
 
 4. Access the API documentation using Swagger UI:
 
-Open a web browser and go to http://localhost:8087/api/v1/swagger-ui/index.html.
+Open a web browser and go to http://localhost:8087.

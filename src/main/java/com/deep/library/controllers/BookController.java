@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +25,7 @@ class BookController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<BookResponse> createBook(
             @RequestBody @Valid BookRequest dto
     ) {
@@ -44,6 +46,7 @@ class BookController {
     }
 
     @DeleteMapping("{bookId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<Void> deleteBook(@PathVariable Long bookId) {
         bookService.deleteBook(bookId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
