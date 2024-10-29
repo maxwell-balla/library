@@ -34,11 +34,13 @@ class BookController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     Page<BookResponse> getBooks(Pageable pageable) {
         return bookService.getAllBooks(pageable);
     }
 
     @GetMapping("/{title}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     ResponseEntity<BookResponse> getBookById(@PathVariable String title) {
         return bookService.getBookById(title)
                 .map(ResponseEntity::ok)

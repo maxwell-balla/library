@@ -4,10 +4,9 @@ import com.deep.library.domains.dto.RefreshRequest;
 import com.deep.library.domains.dto.RefreshResponse;
 import com.deep.library.domains.entities.UserEntity;
 import com.deep.library.exceptions.TokenException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -80,9 +79,36 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        log.info("checking if the accessToken is valid");
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        try {
+            final Claims claims = Jwts.parser()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            if (!claims.get("tokenType").equals("ACCESS")) {
+                throw new TokenException("It's not ACCESS token");
+            }
+            log.info("checking if the accessToken is valid");
+            final String username = extractUsername(token);
+            return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+
+        } catch (SignatureException e) {
+            log.error("Invalid JWT signature: {}", e.getMessage());
+            throw new TokenException("Invalid JWT signature");
+        } catch (MalformedJwtException e) {
+            log.error("Invalid JWT token: {}", e.getMessage());
+            throw new TokenException("Invalid JWT token");
+        } catch (ExpiredJwtException e) {
+            log.error("JWT token is expired: {}", e.getMessage());
+            throw new TokenException("JWT token is expired");
+        } catch (UnsupportedJwtException e) {
+            log.error("JWT token is unsupported: {}", e.getMessage());
+            throw new TokenException("JWT token is unsupported");
+        } catch (IllegalArgumentException e) {
+            log.error("JWT claims string is empty: {}", e.getMessage());
+            throw new TokenException("JWT claims string is empty");
+        }
     }
 
     private boolean isTokenExpired(String token) {

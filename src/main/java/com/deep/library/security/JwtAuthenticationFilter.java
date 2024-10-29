@@ -26,13 +26,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     /**
      * Main JWT authentication filter that processes each HTTP request.
-     * <p>
-     * Process flow:
-     * 1. Check if it's a refresh token request
-     * 2. Validate Authorization header
-     * 3. Extract and validate token
-     * 4. Authenticate user if needed
-     * 5. Continue filter chain
      *
      * @param request HTTP request
      * @param response HTTP response
