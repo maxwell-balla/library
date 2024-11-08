@@ -1,20 +1,13 @@
 spring:
   application:
     name: library
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5430/library
-    username: postgres
-    password: postgres
+  profiles:
+    active: dev
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     open-in-view: false
-
-jwt:
-  secret:
-    key: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
 server:
   port: 8087
